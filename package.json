@@ -1,0 +1,28 @@
+{
+	"name": "mongojs-hooks",
+	"description": "Wrap monogjs in pre and post hooks",
+	"version": "0.1.0",
+	"main": "./mongojs-hooks",
+	"author": {
+		"name": "David N. Johnson"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/clear/mongojs-hooks.git"
+	},
+	"dependencies": {
+		"mongojs": "0.9.x",
+		"fn-hooks": "0.1.x"
+	},
+	"devDependencies": {
+		"mocha": "1.17.x",
+		"should": "3.1.x",
+		"sinon": "1.8.x"
+	},
+	"engines": {
+		"node": ">= 0.8.0"
+	},
+	"scripts": {
+		"test": "node_modules/mocha/bin/mocha --reporter spec"
+	}
+}
