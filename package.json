@@ -12,7 +12,8 @@
 	},
 	"dependencies": {
 		"mongojs": "0.9.x",
-		"fn-hooks": "0.1.x"
+		"fn-hooks": "0.1.x",
+		"lodash": "2.4.x"
 	},
 	"devDependencies": {
 		"mocha": "1.17.x",

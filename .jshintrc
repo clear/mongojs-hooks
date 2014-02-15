@@ -15,7 +15,7 @@
   /*** Enforcing options ***/
   // Set these to `true` to enforce, or `false` to relax.
   "bitwise":      true,
-  "camelcase":    true,
+  "camelcase":    false,
   "curly":        false,
   "eqeqeq":       true,
   "forin":        false,
