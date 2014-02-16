@@ -34,20 +34,8 @@ mongojs.collection = function (name) {
 		colls[name].super_.apply(this, arguments);
 	};
 
+	//Inherit from parent mongojs collection and add pre() and post() hooks
 	util.inherits(colls[name], mongojs.Collection);
-
-	//Create wrapper prototype functions
-	/*
-	Object.keys(mongojs.Collection.prototype).forEach(function (property) {
-		if (typeof mongojs.Collection.prototype[property] === "function") {
-			colls[name].prototype[property] = function () {
-				console.log("proxy fn");
-				mongojs.Collection.prototype.apply(this, arguments);
-			};
-		}
-	});
-	*/
-
 	fnhooks(colls[name].prototype);
 
 	return colls[name].prototype;
