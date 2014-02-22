@@ -14,12 +14,13 @@ mongojs.db = function (key, dbConnectionString) {
 };
 
 //Tenancy helper
-mongojs.Database.prototype.tenant = function () {
+mongojs.Database.prototype.tenant = function (tenantName) {
+	var db = this;
 	var tenant = mongojs.Database.prototype.collection.apply(this, arguments);
 	
-	tenant.collection = function (name) {
+	tenant.collection = function (collName) {
 		//'this' currently refers to the collection returned as 'tenant' and not the db
-		return mongojs.Database.prototype.collection.call(this, name);
+		return mongojs.Database.prototype.collection.call(db, tenantName + "." + collName, collName);
 	};
 
 	return tenant;
@@ -41,13 +42,13 @@ mongojs.collection = function (name) {
 	return colls[name].prototype;
 };
 
-mongojs.Database.prototype.collection = _.wrap(mongojs.Database.prototype.collection, function (fn, name) {
+mongojs.Database.prototype.collection = _.wrap(mongojs.Database.prototype.collection, function (fn, name, collName) {
 	//Create a parent mongojs collection to setup _name and _get fields
 	var collection = fn.call(this, name);
 
-	//Now if a pre-defined collection exists, call it with the internal fields retrieved above
-	if (colls[name])
-		collection = new colls[name](collection._name, collection._get);
+	//Now if a pre-defined collection exists (use tenent-less name if it exists), call it with the internal fields retrieved above
+	if (colls[collName || name])
+		collection = new colls[collName || name](collection._name, collection._get);
 
 	return collection;
 });
