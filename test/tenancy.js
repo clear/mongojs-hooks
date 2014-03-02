@@ -26,4 +26,15 @@ describe("tenancy", function () {
 		collection.should.be.ok;
 		collection._name.should.equal(config.db + ".tenant.tests");
 	});
+
+	//This test doesn't need to assert anything, because if we mock out the call and test to
+	//see if it executes, then we don't evaluate the lazy loading and won't know if it called
+	//correctly. Instead, this test will fail by throwing an exception.
+	it("tenant().collection().find() - with tenant name - should not throw an exception", function (done) {
+		var collection = db.tenant("tenant").collection("tests");
+
+		collection.find(function () {
+			done();
+		});
+	});
 });
