@@ -36,6 +36,11 @@ describe("hooks", function () {
 	});
 
 	describe("save()", function () {
+		afterEach(function () {
+			// Clean-out all hooks from previous tests
+			mongo.reset();
+		});
+
 		describe("when single collection", function () {
 			var saveStub;
 
@@ -95,6 +100,28 @@ describe("hooks", function () {
 				});
 
 				db.collection("tests").save({ test: "property" }, function () {
+					postStub.callCount.should.equal(1);
+
+					done();
+				});
+			});
+
+			it("when pre() and post() hooks added to different instances of same collection should call both hooks", function (done) {
+				var preStub = sinon.stub();
+				var postStub = sinon.stub();
+
+				mongo.collection("tests").pre("save", function (next, object, callback) {
+					preStub();
+					next(object, callback);
+				});
+
+				mongo.collection("tests").post("save", function (next) {
+					postStub();
+					next();
+				});
+
+				db.collection("tests").save({ test: "property" }, function () {
+					preStub.callCount.should.equal(1);
 					postStub.callCount.should.equal(1);
 
 					done();

@@ -29,7 +29,15 @@ mongojs.Database.prototype.tenant = function (tenantName) {
 // Define collection hooks
 var colls = { };
 
+mongojs.reset = function () {
+	colls = { };
+};
+
 mongojs.collection = function (name) {
+	// Use already existing collection if previously created
+	if (colls[name] !== undefined)
+		return colls[name].prototype;
+
 	// Create retrievable collection
 	colls[name] = function () {
 		colls[name].super_.apply(this, arguments);
@@ -46,7 +54,7 @@ mongojs.Database.prototype.collection = _.wrap(mongojs.Database.prototype.collec
 	// Create a parent mongojs collection to setup _name and _get fields
 	var collection = fn.call(this, name);
 
-	// Now if a pre-defined collection exists (use tenent-less name if it exists), call it with the internal fields retrieved above
+	// Now if a pre-defined collection exists (use tenant-less name if it exists), call it with the internal fields retrieved above
 	if (colls[collName || name])
 		collection = new colls[collName || name](collection._name, collection._get);
 
