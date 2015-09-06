@@ -65,11 +65,14 @@ mongojs.util = {
 	// Converts any . and $ characters in key names with the full-length unicode characters.
 	// This is necessary since these two characters are illegal in Mongo key names.
 	sanitise: function (object) {
+		if (_.isString(object))
+			return object.replace(/\./g, "U+FF0E").replace(/\$/g, "U+FF04");
+
 		Object.keys(object).forEach(function (key) {
 			var sKey = key;
 			
 			if (/[.|$]/.test(key)) {
-				sKey = key.replace(/\./g, "U+FF0E").replace(/\$/g, "U+FF04");
+				sKey = mongojs.util.sanitise(key);
 				object[sKey] = object[key];
 				delete object[key];
 			}
@@ -84,11 +87,14 @@ mongojs.util = {
 
 	// Will convert full-length unicode chatacters back to their ASCII form.
 	unsanitise: function (object) {
+		if (_.isString(object))
+			return object.replace(/U\+FF0E/g, ".").replace(/U\+FF04/g, "$");
+
 		Object.keys(object).forEach(function (sKey) {
 			var key = sKey;
 			
 			if (/(U\+FF0E|U\+FF04)/.test(sKey)) {
-				key = sKey.replace(/U\+FF0E/g, ".").replace(/U\+FF04/g, "$");
+				key = mongojs.util.unsanitise(sKey);
 				object[key] = object[sKey];
 				delete object[sKey];
 			}
