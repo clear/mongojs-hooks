@@ -1,7 +1,7 @@
 {
 	"name": "mongojs-hooks",
 	"description": "Wrap monogjs in pre and post hooks",
-	"version": "0.1.3",
+	"version": "0.1.4",
 	"main": "./mongojs-hooks",
 	"author": {
 		"name": "David N. Johnson"
@@ -11,7 +11,7 @@
 		"url": "git://github.com/clear/mongojs-hooks.git"
 	},
 	"dependencies": {
-		"mongojs": "0.9.x",
+		"mongojs": "0.18.x",
 		"fn-hooks": "0.1.x",
 		"lodash": "2.4.x"
 	},
