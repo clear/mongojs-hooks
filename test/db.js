@@ -1,4 +1,3 @@
-require("should");
 var mongo = require("../mongojs-hooks");
 
 describe("db()", function () {

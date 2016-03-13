@@ -1,4 +1,3 @@
-require("should");
 var sinon = require("sinon");
 var mongo = require("../mongojs-hooks");
 var mongojs = require("mongojs");

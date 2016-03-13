@@ -65,46 +65,58 @@ mongojs.util = {
 	// Converts any . and $ characters in key names with the full-length unicode characters.
 	// This is necessary since these two characters are illegal in Mongo key names.
 	sanitise: function (object) {
+		if (!object)
+			return object;
+
 		if (_.isString(object))
 			return object.replace(/\./g, "U+FF0E").replace(/\$/g, "U+FF04");
+
+		var newObject = { };
 
 		Object.keys(object).forEach(function (key) {
 			var sKey = key;
 			
 			if (/[.|$]/.test(key)) {
 				sKey = mongojs.util.sanitise(key);
-				object[sKey] = object[key];
-				delete object[key];
+				newObject[sKey] = object[key];
+			} else {
+				newObject[key] = object[key];
 			}
 			
 			// Recurse
-			if (object[sKey] instanceof Object)
-				object[sKey] = this.sanitise(object[sKey]);
+			if (newObject[sKey] instanceof Object)
+				newObject[sKey] = this.sanitise(newObject[sKey]);
 		}.bind(this));
 		
-		return object;
+		return newObject;
 	},
 
 	// Will convert full-length unicode chatacters back to their ASCII form.
 	unsanitise: function (object) {
+		if (!object)
+			return object;
+		
 		if (_.isString(object))
 			return object.replace(/U\+FF0E/g, ".").replace(/U\+FF04/g, "$");
+
+		var newObject = { };
 
 		Object.keys(object).forEach(function (sKey) {
 			var key = sKey;
 			
 			if (/(U\+FF0E|U\+FF04)/.test(sKey)) {
 				key = mongojs.util.unsanitise(sKey);
-				object[key] = object[sKey];
-				delete object[sKey];
+				newObject[key] = object[sKey];
+			} else {
+				newObject[key] = object[key];
 			}
 			
 			// Recurse
-			if (object[key] instanceof Object)
-				object[key] = this.unsanitise(object[key]);
+			if (newObject[key] instanceof Object)
+				newObject[key] = this.unsanitise(newObject[key]);
 		}.bind(this));
 		
-		return object;
+		return newObject;
 	}
 };
 
