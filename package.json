@@ -1,7 +1,7 @@
 {
 	"name": "mongojs-hooks",
 	"description": "Wrap monogjs in pre and post hooks",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"main": "./mongojs-hooks",
 	"author": {
 		"name": "David N. Johnson"
