@@ -17,7 +17,7 @@
 	},
 	"devDependencies": {
 		"mocha": "1.17.x",
-		"should": "3.1.x",
+		"chai": "1.10.x",
 		"sinon": "1.8.x"
 	},
 	"engines": {

@@ -1,4 +1,3 @@
-require("should");
 var mongo = require("../mongojs-hooks");
 var config = require("./setup");
 

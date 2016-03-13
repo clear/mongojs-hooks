@@ -1,8 +1,13 @@
-require("should");
 var mongo = require("../mongojs-hooks");
 
 describe("util", function () {
 	describe("sanitise()", function () {
+		describe("when null", function () {
+			it("should return null", function () {
+				should.not.exist(mongo.util.sanitise(null));
+			});
+		});
+
 		describe("when a string", function () {
 			it("contains a '.' should replace with 'U+FF0E'", function () {
 				mongo.util.sanitise("hey.there").should.equal("heyU+FF0Ethere");
@@ -69,10 +74,26 @@ describe("util", function () {
 				sanitised.should.have.property("testU+FF0Eone");
 				sanitised["testU+FF0Eone"].should.have.property("testU+FF0Etwo");
 			});
+
+			it("should not mutate original object", function () {
+				var object = {
+					"test.this": "not good"
+				};
+
+				mongo.util.sanitise(object);
+				object.should.not.have.property("testU+FF0Ethis");
+				object.should.have.property("test.this");
+			});
 		});
 	});
 
 	describe("unsanitise()", function () {
+		describe("when null", function () {
+			it("should return null", function () {
+				should.not.exist(mongo.util.unsanitise(null));
+			});
+		});
+
 		describe("when a string", function () {
 			it("contains a '.' should replace with 'U+FF0E'", function () {
 				mongo.util.unsanitise("heyU+FF0Ethere").should.equal("hey.there");
@@ -138,6 +159,16 @@ describe("util", function () {
 				var unsanitised = mongo.util.unsanitise(object);
 				unsanitised.should.have.property("test.one");
 				unsanitised["test.one"].should.have.property("test.two");
+			});
+
+			it("should not mutate original object", function () {
+				var object = {
+					"testU+FF0Ethis": "not good"
+				};
+
+				mongo.util.unsanitise(object);
+				object.should.not.have.property("test.this");
+				object.should.have.property("testU+FF0Ethis");
 			});
 		});
 	});
