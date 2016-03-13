@@ -84,6 +84,43 @@ describe("util", function () {
 				object.should.not.have.property("testU+FF0Ethis");
 				object.should.have.property("test.this");
 			});
+
+			it("should skip object if it contains a _bsontype key", function () {
+				// These are special Mongo objects so don't malform them
+				var object = {
+					_bsontype: "ObjectID",
+					"test.this": "ignore"
+				};
+
+				var sanitised = mongo.util.sanitise(object);
+				sanitised.should.not.have.property("testU+FF0Ethis");
+				sanitised.should.have.property("test.this");
+			});
+		});
+
+		describe("when an Array", function () {
+			it("should maintain all elements in the array", function () {
+				var array = [
+					{ key: "value" },
+					{ second: "object" }
+				];
+
+				var sanitised = mongo.util.sanitise(array);
+				(sanitised instanceof Array).should.be.true;
+				sanitised.length.should.equal(2);
+				sanitised.should.deep.equal(array);
+			});
+
+			it("should sanitise keys in any elements", function () {
+				var array = [
+					{ "test.one": "value" },
+					{ "test.two": "object" }
+				];
+
+				var sanitised = mongo.util.sanitise(array);
+				sanitised[0].should.have.property("testU+FF0Eone");
+				sanitised[1].should.have.property("testU+FF0Etwo");
+			});
 		});
 	});
 
@@ -169,6 +206,43 @@ describe("util", function () {
 				mongo.util.unsanitise(object);
 				object.should.not.have.property("test.this");
 				object.should.have.property("testU+FF0Ethis");
+			});
+
+			it("should skip object if it contains a _bsontype key", function () {
+				// These are special Mongo objects so don't malform them
+				var object = {
+					_bsontype: "ObjectID",
+					"testU+FF0Ethis": "ignore"
+				};
+
+				var unsanitised = mongo.util.unsanitise(object);
+				unsanitised.should.not.have.property("test.this");
+				unsanitised.should.have.property("testU+FF0Ethis");
+			});
+		});
+
+		describe("when an Array", function () {
+			it("should maintain all elements in the array", function () {
+				var array = [
+					{ key: "value" },
+					{ second: "object" }
+				];
+
+				var unsanitised = mongo.util.unsanitise(array);
+				(unsanitised instanceof Array).should.be.true;
+				unsanitised.length.should.equal(2);
+				unsanitised.should.deep.equal(array);
+			});
+
+			it("should unsanitise keys in any elements", function () {
+				var array = [
+					{ "testU+FF0Eone": "value" },
+					{ "testU+FF0Etwo": "object" }
+				];
+
+				var unsanitised = mongo.util.unsanitise(array);
+				unsanitised[0].should.have.property("test.one");
+				unsanitised[1].should.have.property("test.two");
 			});
 		});
 	});
