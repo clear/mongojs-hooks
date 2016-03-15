@@ -122,6 +122,16 @@ describe("util", function () {
 				sanitised[1].should.have.property("testU+FF0Etwo");
 			});
 		});
+
+		describe("when includes a Date", function () {
+			it("should not alter date", function () {
+				var date = new Date("2015-03-02");
+
+				var sanitised = mongo.util.sanitise({ date: date });
+				(sanitised.date instanceof Date).should.be.true;
+				sanitised.date.should.deep.equal(new Date("2015-03-02"));
+			});
+		});
 	});
 
 	describe("unsanitise()", function () {
@@ -243,6 +253,16 @@ describe("util", function () {
 				var unsanitised = mongo.util.unsanitise(array);
 				unsanitised[0].should.have.property("test.one");
 				unsanitised[1].should.have.property("test.two");
+			});
+		});
+
+		describe("when includes a Date", function () {
+			it("should not alter date", function () {
+				var date = new Date("2015-03-02");
+
+				var unsanitised = mongo.util.unsanitise({ date: date });
+				(unsanitised.date instanceof Date).should.be.true;
+				unsanitised.date.should.deep.equal(new Date("2015-03-02"));
 			});
 		});
 	});
