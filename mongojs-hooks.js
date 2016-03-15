@@ -84,7 +84,7 @@ mongojs.util = {
 			}
 			
 			// Recurse
-			if (newObject[sKey] instanceof Object)
+			if (isObject(newObject[sKey]))
 				newObject[sKey] = this.sanitise(newObject[sKey]);
 		}.bind(this));
 		
@@ -112,12 +112,22 @@ mongojs.util = {
 			}
 			
 			// Recurse
-			if (newObject[key] instanceof Object)
+			if (isObject(newObject[key]))
 				newObject[key] = this.unsanitise(newObject[key]);
 		}.bind(this));
 		
 		return newObject;
 	}
+};
+
+var isObject = function (obj) {
+	if (typeof obj !== "object" || obj === null)
+		return false;
+
+	var ObjProto = obj;
+	while (Object.getPrototypeOf(ObjProto = Object.getPrototypeOf(ObjProto)) !== null) ;
+
+	return Object.getPrototypeOf(obj) === ObjProto;
 };
 
 module.exports = mongojs;
