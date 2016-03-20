@@ -117,6 +117,28 @@ mongojs.util = {
 		}.bind(this));
 		
 		return newObject;
+	},
+
+	// Flattens an object into dot-notation
+	flatten: function (object) {
+		var result = { };
+	
+		for (var i in object) {
+			if (!object.hasOwnProperty(i)) continue;
+			
+			if (isObject(object[i])) {
+				var flatObject = this.flatten(object[i]);
+				for (var x in flatObject) {
+					if (!flatObject.hasOwnProperty(x)) continue;
+					
+					result[i + '.' + x] = flatObject[x];
+				}
+			} else {
+				result[i] = object[i];
+			}
+		}
+
+		return result;
 	}
 };
 
