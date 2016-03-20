@@ -309,6 +309,22 @@ describe("util", function () {
 					"first.second": [ "el1", "el2", "el3" ]
 				});
 			});
+
+			it("should not mutate original object", function () {
+				var object = {
+					first: {
+						second: "value"
+					}
+				};
+
+				mongo.util.flatten(object);
+				object.should.not.have.property("first.second");
+				object.should.deep.equal({
+					first: {
+						second: "value"
+					}
+				});
+			});
 		});
 	});
 });
