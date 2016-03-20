@@ -266,4 +266,49 @@ describe("util", function () {
 			});
 		});
 	});
+
+	describe("flatten()", function () {
+		describe("when an object", function () {
+			it("and nested", function () {
+				var object = {
+					first: {
+						second: "value"
+					}
+				};
+
+				var flattened = mongo.util.flatten(object);
+				flattened.should.deep.equal({
+					"first.second": "value"
+				});
+			});
+
+			it("with multiple values", function () {
+				var object = {
+					first: {
+						second: "value",
+						third: "val"
+					}
+				};
+
+				var flattened = mongo.util.flatten(object);
+				flattened.should.deep.equal({
+					"first.second": "value",
+					"first.third": "val"
+				});
+			});
+
+			it("and contains an Array", function () {
+				var object = {
+					first: {
+						second: [ "el1", "el2", "el3" ]
+					}
+				};
+
+				var flattened = mongo.util.flatten(object);
+				flattened.should.deep.equal({
+					"first.second": [ "el1", "el2", "el3" ]
+				});
+			});
+		});
+	});
 });
